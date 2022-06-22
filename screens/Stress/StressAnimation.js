@@ -1,10 +1,17 @@
 import React, { useRef } from "react";
-import { StyleSheet, Text, View, Dimensions, Animated } from "react-native";
-import StressBreathing from "./StressBreathing";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  Animated,
+  Alert,
+} from "react-native";
+import { numIteration } from "./StressBreathing";
 
 const { width, height } = Dimensions.get("window");
 const circleWidth = width / 2;
-export default function StressAnimation() {
+const StressAnimation = ({ navigation }) => {
   const move = useRef(new Animated.Value(0)).current;
   const textOpacity = useRef(new Animated.Value(1)).current;
   Animated.loop(
@@ -35,8 +42,11 @@ export default function StressAnimation() {
           useNativeDriver: true,
         }),
       ]),
-    ])
-  ).start();
+    ]),
+    {
+      iterations: parseInt(numIteration),
+    }
+  ).start(() => navigation.goBack());
   const translate = move.interpolate({
     inputRange: [0, 1],
     outputRange: [0, circleWidth / 6],
@@ -115,7 +125,7 @@ export default function StressAnimation() {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -127,3 +137,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#60c85b",
   },
 });
+
+export default StressAnimation;
